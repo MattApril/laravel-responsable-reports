@@ -68,7 +68,7 @@ abstract class Response implements ReportResponse, Responsable
     public function toResponse($request)
     {
         if( $this->report instanceof PaginatedReport && $this->supportsPagination() ){
-            $this->report->setPageNumber( $request->page ?? 1 ); // TODO page should not be hardcoded
+            $this->report->setPageNumber( $request->page ?? 1 ); // TODO 'page' should not be hardcoded
             $data = $this->report->getSinglePage();
         } else {
             $data = $this->report->getFullReport();

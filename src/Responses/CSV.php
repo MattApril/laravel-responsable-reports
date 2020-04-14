@@ -50,7 +50,7 @@ class CSV extends Response
             },
             200,
             [
-                'Content-Type'          => self::MEDIA_TYPE,
+                'Content-Type'          => self::getMediaType(),
                 'Content-Disposition'   => "attachment; filename=\"{$title}.csv\"",
                 'Pragma'                => 'no-cache',
                 'Cache-Control'         => 'no-cache, must-revalidate',
