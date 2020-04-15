@@ -74,12 +74,7 @@ abstract class Response implements ReportResponse, Responsable
             $data = $this->report->getFullReport();
         }
 
-        # if no headings are defined on the report just default to using the data keys
-        if(empty($headings = $this->report->getHeadings()) && !empty($data)) {
-            $headings = array_keys( $data[0] );
-        }
-
-        return $this->makeResponse($data, $this->report->getTitle(), $headings);
+        return $this->makeResponse($data, $this->report->getTitle(), $this->report->getHeadings());
     }
 
     /**

@@ -34,6 +34,11 @@ class CSV extends Response
      */
     public function makeResponse(array $data, string $title, array $headings): SymphonyResponse
     {
+        # if no headings are defined on the report just default to using the data keys
+        if(empty($headings) && !empty($data)) {
+            $headings = array_keys( $data[0] );
+        }
+
         # insert headings as first row
         array_unshift($data, $headings);
 
