@@ -46,7 +46,7 @@ class ResponsableReportsProvider extends ServiceProvider
         });
 
         # choose one via content negotiation
-        $preferredMediaType = request()->prefers($responseClasses->keys()->toArray());
+        $preferredMediaType = app('request')->prefers($responseClasses->keys()->toArray());
 
         # instantiate the response class with the given report instance
         $responseClass = $responseClasses->get($preferredMediaType);
