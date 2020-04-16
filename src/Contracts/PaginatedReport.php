@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace MattApril\ResponsableReports\Contracts;
+use Illuminate\Contracts\Pagination\Paginator;
 
 /**
  * Interface Paginated
@@ -13,9 +14,9 @@ interface PaginatedReport
 {
     /**
      * gets a single paginated page
-     * @return array
+     * @return Paginator
      */
-    public function getSinglePage(): array;
+    public function getSinglePage(): Paginator;
 
     /**
      * Sets number of records per page

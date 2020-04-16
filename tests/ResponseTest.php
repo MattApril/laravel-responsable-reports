@@ -3,8 +3,10 @@
 namespace Tests;
 
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use MattApril\ResponsableReports\PaginatedReportGenerator;
 use MattApril\ResponsableReports\ReportGenerator;
+use MattApril\ResponsableReports\Responses\JSON;
 use MattApril\ResponsableReports\Responses\Response;
 use PHPUnit\Framework\TestCase;
 
@@ -18,8 +20,7 @@ class ResponseTest extends TestCase
         $report = \Mockery::mock(ReportGenerator::class)->makePartial();
         $report->shouldReceive('getFullReport')->once()->andReturn($reportData);
 
-        $response = \Mockery::mock(Response::class.'[makeResponse]', [$report])->shouldAllowMockingProtectedMethods();
-        $this->configureResponse($response, false);
+        $response = \Mockery::mock(Response::class.'[makeResponse]', [$report]);
         $response->shouldReceive('makeResponse')
             ->once()
             ->with($reportData, \Mockery::any(), \Mockery::any())
@@ -34,15 +35,14 @@ class ResponseTest extends TestCase
      * it should only return a single page.
      */
     public function testPaginatedReportWhenPaginationSupported() {
-        $paginatedData = [['col1' =>'data']];
+        $paginator = \Mockery::mock(LengthAwarePaginator::class);
         $report = \Mockery::mock(PaginatedReportGenerator::class)->makePartial();
-        $report->shouldReceive('getSinglePage')->once()->andReturn($paginatedData);
+        $report->shouldReceive('getSinglePage')->once()->andReturn($paginator);
 
-        $response = \Mockery::mock(Response::class.'[makeResponse]', [$report])->shouldAllowMockingProtectedMethods();
-        $this->configureResponse($response, true);
-        $response->shouldReceive('makeResponse')
+        $response = \Mockery::mock(JSON::class.'[makePaginatedResponse]', [$report]);
+        $response->shouldReceive('makePaginatedResponse')
             ->once()
-            ->with($paginatedData, \Mockery::any(), \Mockery::any())
+            ->with($paginator, \Mockery::any(), \Mockery::any())
             ->andReturn($httpResponse = \Illuminate\Support\Facades\Response::make('Final Response'));
         $actualHttpResponse = $response->toResponse(new \stdClass());
 
@@ -58,8 +58,7 @@ class ResponseTest extends TestCase
         $report = \Mockery::mock(PaginatedReportGenerator::class)->makePartial();
         $report->shouldReceive('getFullReport')->once()->andReturn($fullReportData);
 
-        $response = \Mockery::mock(Response::class.'[makeResponse]', [$report])->shouldAllowMockingProtectedMethods();
-        $this->configureResponse($response, false);
+        $response = \Mockery::mock(Response::class.'[makeResponse]', [$report]);
         $response->shouldReceive('makeResponse')
             ->once()
             ->with($fullReportData, \Mockery::any(), \Mockery::any())
@@ -67,19 +66,5 @@ class ResponseTest extends TestCase
         $actualHttpResponse = $response->toResponse(new \stdClass());
 
         $this->assertSame($httpResponse, $actualHttpResponse);
-    }
-
-    /**
-     * @param $response
-     * @param bool $supportsPagination
-     * @return mixed
-     */
-    private function configureResponse($response, bool $supportsPagination) {
-        $reflection = new \ReflectionClass($response);
-        $paginationProperty = $reflection->getProperty('supportsPagination');
-        $paginationProperty->setAccessible(true);
-        $paginationProperty->setValue($response, $supportsPagination);
-
-        return $response;
     }
 }

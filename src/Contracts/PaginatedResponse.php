@@ -3,22 +3,17 @@
 namespace MattApril\ResponsableReports\Contracts;
 
 
+use Illuminate\Contracts\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\Response as SymphonyResponse;
 
-interface ReportResponse {
+interface PaginatedResponse {
 
     /**
-     * @param array $data
+     * @param Paginator $paginator
      * @param string $title
      * @param array $headings
      *
      * @return SymphonyResponse
      */
-    public function makeResponse(array $data, string $title, array $headings): SymphonyResponse;
-
-    /**
-     * @return string
-     */
-    public static function getMediaType(): string;
-
+    public function makePaginatedResponse(Paginator $paginator, string $title, array $headings): SymphonyResponse;
 }

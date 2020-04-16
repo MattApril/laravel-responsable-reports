@@ -6,6 +6,7 @@ namespace MattApril\ResponsableReports\Responses;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
 use MattApril\ResponsableReports\Contracts\PaginatedReport;
+use MattApril\ResponsableReports\Contracts\PaginatedResponse;
 use MattApril\ResponsableReports\Contracts\Report;
 use MattApril\ResponsableReports\Contracts\ReportResponse;
 
@@ -22,16 +23,6 @@ abstract class Response implements ReportResponse, Responsable
     public const MEDIA_TYPE = null;
 
     /**
-     * False will never return paginated results
-     * True will return paginated results for reports classes that support pagination.
-     *
-     * TODO: this is not really a property of the response type.. rethink.
-     *
-     * @var bool
-     */
-    protected $supportsPagination = false;
-
-    /**
      * @var Report
      */
     protected $report;
@@ -43,14 +34,6 @@ abstract class Response implements ReportResponse, Responsable
     public function __construct(Report $report)
     {
         $this->report = $report;
-    }
-
-    /**
-     * @return bool
-     */
-    public function supportsPagination(): bool
-    {
-        return $this->supportsPagination;
     }
 
     /**
@@ -67,24 +50,15 @@ abstract class Response implements ReportResponse, Responsable
      */
     public function toResponse($request)
     {
-        if( $this->report instanceof PaginatedReport && $this->supportsPagination() ){
+        if( $this->report instanceof PaginatedReport && $this instanceof PaginatedResponse){
             $this->report->setPageNumber( $request->page ?? 1 ); // TODO 'page' should not be hardcoded
-            $data = $this->report->getSinglePage();
+            $paginator = $this->report->getSinglePage();
+            $response = $this->makePaginatedResponse($paginator, $this->report->getTitle(), $this->report->getHeadings());
         } else {
             $data = $this->report->getFullReport();
+            $response = $this->makeResponse($data, $this->report->getTitle(), $this->report->getHeadings());
         }
 
-        return $this->makeResponse($data, $this->report->getTitle(), $this->report->getHeadings());
+        return $response;
     }
-
-    /**
-     * To be implemented by inheriting class.
-     *
-     * @param array $data
-     * @param string $title
-     * @param array $headings
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    protected abstract function makeResponse(array $data, string $title, array $headings): \Symfony\Component\HttpFoundation\Response;
 }

@@ -19,11 +19,6 @@ class CSV extends Response
     public const MEDIA_TYPE = 'text/csv';
 
     /**
-     * @var bool
-     */
-    protected $supportsPagination = false;
-
-    /**
      * Generate a CSV response
      *
      * @param array $data
