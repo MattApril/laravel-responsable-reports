@@ -31,7 +31,7 @@ class CSV extends Response
     {
         # if no headings are defined on the report just default to using the data keys
         if(empty($headings) && !empty($data)) {
-            $headings = array_keys( $data[0] );
+            $headings = array_keys( (array)$data[0] );
         }
 
         # insert headings as first row
@@ -44,7 +44,7 @@ class CSV extends Response
                 $handle = fopen('php://output', 'w');
                 // Loop through the data and write each entry as a new row in the csv
                 foreach ($data as $row) {
-                    fputcsv($handle, $row);
+                    fputcsv($handle, (array)$row);
                 }
                 fclose($handle);
             },
