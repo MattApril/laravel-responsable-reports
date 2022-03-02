@@ -1,6 +1,6 @@
 {
     "name": "mattapril/laravel-responsable-reports",
-    "description": "Framework for easily converting reports into HTTP responses",
+    "description": "Library for easily converting reports into various HTTP responses",
     "type": "library",
     "license": "MIT",
     "keywords": ["laravel", "reports", "paginated", "content", "negotiation"],
@@ -12,14 +12,14 @@
     ],
     "require": {
         "php": ">=7.0",
-        "illuminate/support": "^5.5|^6|^7|^8",
-        "illuminate/contracts": "^5.5|^6|^7|^8",
-        "illuminate/routing": "^5.5|^6|^7|^8"
+        "illuminate/support": "^5.5|^6|^7|^8|^9",
+        "illuminate/contracts": "^5.5|^6|^7|^8|^9",
+        "illuminate/routing": "^5.5|^6|^7|^8|^9"
     },
     "require-dev": {
-        "laravel/framework": "^7.1",
-        "phpunit/phpunit": "^6.0|^7.0|^8.0",
-        "orchestra/testbench": "^5.1"
+        "laravel/framework": "^9.0",
+        "phpunit/phpunit": "^9.0",
+        "orchestra/testbench": "^7"
 
     },
     "autoload": {
