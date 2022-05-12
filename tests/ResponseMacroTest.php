@@ -42,6 +42,25 @@ class ResponseMacroTest extends Orchestra
     }
 
     /**
+     * When an invalid or unsupported media type is requested, the first configured response class should be used.
+     */
+    public function testNegotiatedResponseFallback() {
+        $expectedResponseClass = config('reports.response_types')[0];
+
+        # because we're not making a real application request,
+        # lets mock the method we use on the request facade to define the preferred media type
+        $request = Request::getFacadeRoot();
+        $request = \Mockery::mock($request)->makePartial();
+        $request->shouldReceive('prefers')->andReturn(null);
+        Request::swap($request);
+
+        $report = \Mockery::mock(Report::class);
+        $reportResponse = response()->report($report);
+
+        $this->assertInstanceOf($expectedResponseClass, $reportResponse);
+    }
+
+    /**
      * Register our package provider so that the response macro gets set.
      *
      * @param \Illuminate\Foundation\Application $app
