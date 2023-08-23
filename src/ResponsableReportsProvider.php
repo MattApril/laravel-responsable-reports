@@ -5,6 +5,7 @@ namespace MattApril\ResponsableReports;
 
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
+use MattApril\ResponsableReports\Contracts\PaginatedReport;
 use MattApril\ResponsableReports\Contracts\Report;
 use MattApril\ResponsableReports\Contracts\ReportResponse;
 
@@ -45,8 +46,24 @@ class ResponsableReportsProvider extends ServiceProvider
             }
         });
 
-        # choose one via content negotiation
+        # set per page count from request
+        $paginationConfig = config('reports.pagination');
+        if($report instanceof PaginatedReport && isset($paginationConfig['per_page_key'])) {
+            $perPage = app('request')->input($paginationConfig['per_page_key']);
+            if(is_numeric($perPage)) {
+                $perPage = (int) $perPage;
+                # per page limit, if configured
+                if(isset($paginationConfig['per_page_max'])) {
+                    $perPage = min($perPage, (int) $paginationConfig['per_page_max']);
+                }
+                $perPage = max(1, $perPage); # at least 1
+                $report->setPerPage($perPage);
+            }
+        }
+
+        # choose media type via content negotiation
         $preferredMediaType = app('request')->prefers($responseClasses->keys()->toArray());
+
 
         # instantiate the response class with the given report instance
         $responseClass = $responseClasses->get($preferredMediaType, $responseClasses->first());
