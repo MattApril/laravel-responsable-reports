@@ -16,12 +16,12 @@ abstract class PaginatedReportGenerator extends ReportGenerator implements Pagin
     /**
      * @var int
      */
-    protected $perPage = 25;
+    protected int $perPage = 25;
 
     /**
      * @var int
      */
-    protected $pageNum = 1;
+    protected int $pageNum = 1;
 
     /**
      * Sets number of records per page

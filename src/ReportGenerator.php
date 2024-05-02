@@ -15,20 +15,19 @@ abstract class ReportGenerator implements Report
 {
     /**
      * default report title, will be used as is if no
-     * @var string
      */
-    protected $defaultTitle;
+    protected ?string $defaultTitle = null;
 
     /**
      * Headings as they should appear on export
      * @var array
      */
-    protected $headings = [];
+    protected array $headings = [];
 
     /**
      * @var array
      */
-    protected $filters = [];
+    protected array $filters = [];
 
     /**
      * Sets all filters
