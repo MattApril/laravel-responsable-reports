@@ -48,9 +48,9 @@ abstract class Response implements ReportResponse, Responsable
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function toResponse($request): \Illuminate\Http\Response
+    public function toResponse($request)
     {
-        if( $this->report instanceof PaginatedReport && $this instanceof PaginatedResponse){
+        if($this->report instanceof PaginatedReport && $this instanceof PaginatedResponse) {
             $this->report->setPageNumber( $request->page ?? 1 ); // TODO 'page' should not be hardcoded
             $paginator = $this->report->getSinglePage();
             $response = $this->makePaginatedResponse($paginator, $this->report->getTitle(), $this->report->getHeadings());
