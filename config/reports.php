@@ -15,7 +15,7 @@ return [
     'pagination' => [
         # request input key used to dynamically set the results per page
         # leave unset to prevent this or implement your own.
-        'per_page_key' => env('REPORT_PER_PAGE_KEY'),
+        'per_page_key' => env('REPORT_PER_PAGE_KEY', 'per_page'),
 
         # max results per page using per_page_key
         'per_page_max' => env('REPORT_PER_PAGE_MAX', 100)
